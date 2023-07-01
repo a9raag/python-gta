@@ -13,7 +13,7 @@ from torchvision.io import read_image, ImageReadMode
 
 from gta_dataset import MAX_X_VAL, MIN_X_VAL, MAX_TRIGGER_VAL, MIN_TRIGGER_VAL
 from models.model import ResidualBlock, ResNet
-from models.test_model import TestModel
+from models.custom_model import CustomModel
 from util.capture_screen import grab_screen
 from util.datagen import wait_for_q
 
@@ -86,7 +86,7 @@ class VJoyInput:
         return z_axis // 2
 
     def to_vjoy_metrics(self, x, lt, rt):
-        x = 2000 + (x // 2)
+        x = (x // 2)
         z = self.get_z_axis(lt, rt)
         return x, z
 
@@ -104,7 +104,7 @@ class VJoyInput:
 def load_model():
     # resnet = TestModel()
     resnet = ResNet(ResidualBlock, [2, 2, 2, 2])
-    resnet.load_state_dict(torch.load("E:/data/models/res-balanced-v2-100-mse-lrs-100k-adam-minmax.pth"))
+    resnet.load_state_dict(torch.load("E:/data/models/resnet18-balanced-v2-57-l1-CLR-98k-sgd-minmax.pth"))
     return resnet
 
 

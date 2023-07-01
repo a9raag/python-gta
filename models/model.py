@@ -56,7 +56,8 @@ class ResNet(nn.Module):
         self.avgpool = nn.AvgPool2d(7, stride=1)
         self.relu = nn.LeakyReLU()
         self.fc = nn.Linear(512, num_classes)
-        torch.nn.init.kaiming_uniform_(self.fc.weight, nonlinearity='leaky_relu')
+        torch.nn.init.normal_(self.fc.weight, mean=0.0, std=0.01)
+        # torch.nn.init.kaiming_uniform_(self.fc.weight, nonlinearity='leaky_relu')
 
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None
@@ -92,3 +93,11 @@ class ResNet(nn.Module):
 
     def view_grads(self):
         pass
+
+
+if __name__ == '__main__':
+    from torchsummary import summary
+
+    model = ResNet(ResidualBlock, [2, 2, 2, 2], num_classes=2)
+    model.to("cuda")
+    summary(model, (3, 224, 224))
