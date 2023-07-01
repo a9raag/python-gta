@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import torch
+import cv2
 
 from torch.utils.data import Dataset
 from torchvision.io import read_image, ImageReadMode
@@ -21,13 +22,15 @@ class GTADataset(Dataset):
         # self.scaled_df = (self.df[["x", "rt"]] - np.array([MIN_X_VAL, MIN_TRIGGER_VAL])) / np.array(
         #     [MAX_X_VAL - MIN_X_VAL, MAX_TRIGGER_VAL - MIN_TRIGGER_VAL])
 
-        self.scaled_df = (self.df[["x"]] - np.array([MIN_X_VAL])) / np.array(
-            [MAX_X_VAL - MIN_X_VAL])
+        self.scaled_df = self.df[["x", "rt"]]
         self.target_transform = target_transform
         self.transform = transform
 
     def __len__(self):
         return len(self.df)
+
+    def preprocessing(self, image):
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
     def __getitem__(self, idx):
         img_path = self.df.iloc[idx].image
